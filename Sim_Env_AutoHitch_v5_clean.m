@@ -13,15 +13,20 @@ Vid_result_name = ['AH_2D_sim_']; % datestr(now, 'mm_dd_yyyy__HH_MM_SS')
 
 rng(188);
 %% Initializations
+p = getParams();
+RWA_max = p.RWA_max;
+RWA_min = p.RWA_min;
+Ts = p.Ts;
+v = p.v;
+
 % User Parameters
-RWA_max           = 30*pi/180;  % Steering Saturation
 Show_RWA_on_video = 1;
 Live_plot = 0;
 
 % Approach Angle Case - Vehilce at 0 heading initially
 trailer_angle = deg2rad(15); % trailer heading angle w.r.t host
-Stanley_Approach = 1;
 
+Stanley_Approach = 0;
 Variable_Steer            = 1; % flag to steer larger initially or not
 Variable_Steer_Gain_Decay = 1;
 Noise_active              = 1;
@@ -29,12 +34,9 @@ Use_Kalman                = 1;
 
 Noise_gain = 50;
 
-Ts = 0.1;
-v = -450;
-
 % initial hitchball location
-x_b = 14e3;
-y_b = 0; 3e3;
+x_b = 8e3;
+y_b = 8e3;
 h_b = -0.500e3;
 
 % origin at true coupler location
@@ -64,7 +66,7 @@ Vid_result_name = [Vid_result_name,'_yb_',num2str(abs(y_b)),'_xb_',num2str(abs(x
 delete(['.\Video_Results\',Vid_result_name,'.mp4']);
 
 % Define the parameters for saving videos
-frameRate = 15; % Frames per second
+frameRate = p.frameRate;
 outputVideoFile = ['.\Video_Results\',Vid_result_name,'.mp4'];
 videoWriter1 = VideoWriter(outputVideoFile, 'MPEG-4');
 videoWriter1.Quality = 100;
@@ -84,8 +86,8 @@ theta_hist=[];
 delta_hist =[];
 
 hitched = 0;
-accel = 0;
-L = 3.6*1000;
+accel = p.accel;
+L = p.L;
 
 
 % Cam coordinates : y direction is toward front of vehicle
